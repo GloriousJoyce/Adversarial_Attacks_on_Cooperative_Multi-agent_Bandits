@@ -33,7 +33,7 @@ def Attack():
 
 
 Repeat = 10
-T = 10000
+T = 100000
 K = 20
 M = 20
 Km = 5
@@ -214,11 +214,16 @@ for counter in range(Repeat):
         if t > 0:
             Cost_OA[counter][t] += Cost_OA[counter][t-1]
 
+std_OA = np.std(Regret_OA, axis=0)
 Regret_OA = np.average(Regret_OA, axis=0)
+lower_OA, upper_OA = Regret_OA - std_OA, Regret_OA + std_OA
+
 for i in range(Repeat):
     for j in range(T):
         Cost_OA[i][j] /= (j+1)
+Cost_std_OA = np.std(Cost_OA, axis=0)
 Cost_OA = np.average(Cost_OA, axis=0)
+lower_Cost_OA, upper_Cost_OA = Cost_OA - Cost_std_OA, Cost_OA + Cost_std_OA
 # print(Regret_OA)
 # print(Cost_OA)
 
@@ -328,11 +333,16 @@ for counter in range(Repeat):
             Regret_LTA[counter][t] = (Optimal * (t+1) - sum(Mu * n)) / (t+1)
         Cost_LTA[counter][t] += Cost_LTA[counter][t-1]
 
+std_LTA = np.std(Regret_LTA, axis=0)
 Regret_LTA = np.average(Regret_LTA, axis=0)
+lower_LTA, upper_LTA = Regret_LTA - std_LTA, Regret_LTA + std_LTA
+
 for i in range(Repeat):
     for j in range(T):
         Cost_LTA[i][j] /= (j+1)
+Cost_std_LTA = np.std(Cost_LTA, axis=0)
 Cost_LTA = np.average(Cost_LTA, axis=0)
+lower_Cost_LTA, upper_Cost_LTA = Cost_LTA - Cost_std_LTA, Cost_LTA + Cost_std_LTA
 # print(Regret_LTA)
 # print(Cost_LTA)
 
@@ -385,11 +395,16 @@ for counter in range(Repeat):
         if t > 0:
             Cost_OAW[counter][t] += Cost_OAW[counter][t-1]
 
+std_OAW = np.std(Regret_OAW, axis=0)
 Regret_OAW = np.average(Regret_OAW, axis=0)
+lower_OAW, upper_OAW = Regret_OAW - std_OAW, Regret_OAW + std_OAW
+
 for i in range(Repeat):
     for j in range(T):
         Cost_OAW[i][j] /= (j+1)
+Cost_std_OAW = np.std(Cost_OAW, axis=0)
 Cost_OAW = np.average(Cost_OAW, axis=0)
+lower_Cost_OAW, upper_Cost_OAW = Cost_OAW - Cost_std_OAW, Cost_OAW + Cost_std_OAW
 # print(Regret_OAW)
 # print(Cost_OAW)
 
@@ -494,11 +509,16 @@ for counter in range(Repeat):
             Regret_OLTA[counter][t] = (Optimal * (t+1) - sum(Mu * n)) / (t+1)
         Cost_OLTA[counter][t] += Cost_OLTA[counter][t-1]
 
+std_OLTA = np.std(Regret_OLTA, axis=0)
 Regret_OLTA = np.average(Regret_OLTA, axis=0)
+lower_OLTA, upper_OLTA = Regret_OLTA - std_OLTA, Regret_OLTA + std_OLTA
+
 for i in range(Repeat):
     for j in range(T):
         Cost_OLTA[i][j] /= (j+1)
+Cost_std_OLTA = np.std(Cost_OLTA, axis=0)
 Cost_OLTA = np.average(Cost_OLTA, axis=0)
+lower_Cost_OLTA, upper_Cost_OLTA = Cost_OLTA - Cost_std_OLTA, Cost_OLTA + Cost_std_OLTA
 # print(Regret_OLTA)
 # print(Cost_OLTA)
 
@@ -538,7 +558,10 @@ for counter in range(Repeat):
         for arm in range(K):
             Regret[counter][t] = (Optimal * (t+1) - sum(Mu * n)) / (t+1)
 
+std = np.std(Regret, axis=0)
 Regret = np.average(Regret, axis=0)
+lower, upper = Regret - std, Regret + std
+
 
 
 
@@ -546,11 +569,18 @@ Regret = np.average(Regret, axis=0)
 plt.figure()
 plt.grid(True)
 x = np.linspace(0, T, T)
-plt.plot(x, Regret_LTA, label="LTA", color="red", linewidth="2")
-plt.plot(x, Regret_OA, label="OA", color="orange", linewidth="2", linestyle="--")
-plt.plot(x, Regret_OLTA, label="LTA w/o AAS", color="blue", linewidth="2", linestyle=":")
-plt.plot(x, Regret_OAW, label="OA w/o AAS", color="purple", linewidth="2", linestyle="-.")
-plt.plot(x, Regret, label="No attack", color="green", linewidth="2")
+
+plt.plot(x, Regret_LTA, label="LTA", color="red", linewidth="1.2")
+plt.fill_between(x, lower_LTA, upper_LTA, alpha=0.5, color='pink')
+plt.plot(x, Regret_OA, label="OA", color="orange", linewidth="1.2", linestyle="--")
+plt.fill_between(x, lower_OA, upper_OA, alpha=0.5, color='gold')
+plt.plot(x, Regret_OLTA, label="LTA w/o AAS", color="blue", linewidth="1.2", linestyle=":")
+plt.fill_between(x, lower_OLTA, upper_OLTA, alpha=0.5, color='deepskyblue')
+plt.plot(x, Regret_OAW, label="OA w/o AAS", color="purple", linewidth="1.2", linestyle="-.")
+plt.fill_between(x, lower_OAW, upper_OAW, alpha=0.5, color='mediumpurple')
+plt.plot(x, Regret, label="No attack", color="green", linewidth="1.2")
+plt.fill_between(x, lower, upper, alpha=0.5, color='lime')
+
 plt.xlabel("Round", fontsize=20)
 plt.ylabel("Average Regret", fontsize=20)
 plt.legend(fontsize=12)
@@ -564,10 +594,16 @@ plt.show()
 plt.figure()
 plt.grid(True)
 x = np.linspace(0, T, T)
-plt.plot(x, Cost_LTA, label="LTA", color="red", linewidth="2")
-plt.plot(x, Cost_OA, label="OA", color="orange", linewidth="2", linestyle="--")
-plt.plot(x, Cost_OLTA, label="LTA w/o AAS", color="blue", linewidth="2", linestyle=":")
-plt.plot(x, Cost_OAW, label="OA w/o AAS", color="purple", linewidth="2", linestyle="-.")
+
+plt.plot(x, Cost_LTA, label="LTA", color="red", linewidth="1.2")
+plt.fill_between(x, lower_Cost_LTA, upper_Cost_LTA, alpha=0.5, color='pink')
+plt.plot(x, Cost_OA, label="OA", color="orange", linewidth="1.2", linestyle="--")
+plt.fill_between(x, lower_Cost_OA, upper_Cost_OA, alpha=0.5, color='gold')
+plt.plot(x, Cost_OLTA, label="LTA w/o AAS", color="blue", linewidth="1.2", linestyle=":")
+plt.fill_between(x, lower_Cost_OLTA, upper_Cost_OLTA, alpha=0.5, color='deepskyblue')
+plt.plot(x, Cost_OAW, label="OA w/o AAS", color="purple", linewidth="1.2", linestyle="-.")
+plt.fill_between(x, lower_Cost_OAW, upper_Cost_OAW, alpha=0.5, color='mediumpurple')
+
 plt.xlabel("Round", fontsize=20)
 plt.ylabel("Average Cost", fontsize=20)
 plt.legend(fontsize=12)
